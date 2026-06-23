@@ -180,6 +180,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.launcher.blur.appLaunch=0
 endif
 
+
 # FCM
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += vendor/yaap/config/device_framework_matrix.xml
 
@@ -211,3 +212,11 @@ $(call inherit-product, vendor/themes/common.mk)
 
 # Sepolicy
 $(call inherit-product, vendor/yaap/config/sepolicy.mk)
+
+# Enable background blur for widget picker
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    ro.launcher.depth.widget=true
+
+# Inherit vendor/cipher-extras if exists
+$(call inherit-product-if-exists, vendor/cipher-extra/cipher.mk)
+
