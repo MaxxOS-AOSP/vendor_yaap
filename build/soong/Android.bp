@@ -23,7 +23,11 @@ yaap_generator {
     // The headers make command
     cmd: "set -e; " +
          "(cd $(KERNEL_BUILD_OUT_PREFIX).; " +
-         "$(PATH_OVERRIDE_SOONG) $(KERNEL_MAKE_CMD) $(KERNEL_MAKE_FLAGS) -C $(TARGET_KERNEL_SOURCE) O=$(KERNEL_BUILD_OUT_PREFIX)$(genDir) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) headers_install && vendor/yaap/tools/clean_headers.sh $(KERNEL_BUILD_OUT_PREFIX)$(genDir))",
+         "if [ -f $(TARGET_KERNEL_SOURCE)/Makefile ] || [ -f $(TARGET_KERNEL_SOURCE)/Kbuild ]; then " +
+         "$(PATH_OVERRIDE_SOONG) $(KERNEL_MAKE_CMD) $(KERNEL_MAKE_FLAGS) -C $(TARGET_KERNEL_SOURCE) O=$(KERNEL_BUILD_OUT_PREFIX)$(genDir) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) headers_install; " +
+         "else " +
+         "mkdir -p $(KERNEL_BUILD_OUT_PREFIX)$(genDir)/usr/include && cp -R $(TARGET_KERNEL_SOURCE)/* $(KERNEL_BUILD_OUT_PREFIX)$(genDir)/usr/include/; " +
+         "fi && vendor/yaap/tools/clean_headers.sh $(KERNEL_BUILD_OUT_PREFIX)$(genDir))",
 
     // Directories that can be imported by a cc_* module generated_headers property
     export_include_dirs: [
